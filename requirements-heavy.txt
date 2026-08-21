@@ -1,0 +1,14 @@
+# Optional: real ASR + real TTS + diarization. Not needed for the offline demo.
+# Requires ffmpeg on PATH. faster-whisper will download model weights on first use.
+-r requirements.txt
+
+faster-whisper>=1.0.2
+ctranslate2>=4.0
+edge-tts>=6.1
+
+# Diarization (heavy; needs a HuggingFace token for pyannote gated models)
+# pyannote.audio>=3.1
+# torch>=2.2
+
+# Gradient-boosted escalation model (sklearn HistGradientBoosting is used by default)
+# lightgbm>=4.3
