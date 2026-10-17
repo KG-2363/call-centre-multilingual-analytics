@@ -38,7 +38,7 @@ _CONF_ORTHOGRAPHIC_MAX = 0.80
 _DISFLUENCY_RE = re.compile(
     r"\b(uh+|um+|hmm+|haan+|arre+|matlab|you know|i mean|actually)\b", re.IGNORECASE
 )
-_REPEAT_RE = re.compile(r"\b(\p{L}+)(\s+\1\b)+", re.IGNORECASE)
+_REPEAT_RE = re.compile(r"\b([\p{L}\p{M}]+)(\s+\1\b)+", re.IGNORECASE)
 
 
 @dataclass
@@ -236,7 +236,7 @@ def normalize_text(text: str) -> str:
     out = normalize_devanagari(text)
     out = _REPEAT_RE.sub(r"\1", out)
     out = _DISFLUENCY_RE.sub(" ", out)
-    out = re.sub(r"[^\p{L}\p{Nd}\s'’%.,?-]", " ", out)
+    out = re.sub(r"[^\p{L}\p{M}\p{Nd}\s'’%.,?-]", " ", out)
     out = re.sub(r"\s+", " ", out).strip().lower()
     return out
 

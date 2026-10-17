@@ -15,7 +15,7 @@ DEVANAGARI = re.compile(r"[\p{Devanagari}]")
 LATIN = re.compile(r"[\p{Latin}]")
 DIGIT = re.compile(r"[\p{Nd}]")
 
-TOKEN_RE = re.compile(r"[\p{L}\p{Nd}][\p{L}\p{Nd}'’\-]*", re.UNICODE)
+TOKEN_RE = re.compile(r"[\p{L}\p{Nd}][\p{L}\p{M}\p{Nd}'’\-]*", re.UNICODE)
 
 
 class Script(str, Enum):
