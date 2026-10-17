@@ -54,9 +54,11 @@ def romanization_score(token: str) -> float:
 
     score = 0.0
 
+    matched_suffix = ""
     for suf in _HINDI_SUFFIXES:
         if tok.endswith(suf) and len(tok) > len(suf):
             score += 0.28
+            matched_suffix = suf
             break
 
     if any(d in tok for d in _HINDI_DIGRAPHS):
@@ -77,8 +79,11 @@ def romanization_score(token: str) -> float:
             score -= 0.45
             break
 
-    if tok.endswith("e") and len(tok) > 4 and tok[-2] not in _VOWELS:
-        score -= 0.15  # silent-e is an English pattern ("service", "charge")
+    # Silent-e is an English pattern ("service", "charge"), but a long Hindi verb
+    # ending such as -enge or -iye also ends consonant + e; don't penalise those.
+    if (tok.endswith("e") and len(tok) > 4 and tok[-2] not in _VOWELS
+            and len(matched_suffix) < 3):
+        score -= 0.15
 
     return max(0.0, min(1.0, score))
 
@@ -174,4 +179,4 @@ def back_transliterate(text: str, only_hindi_tokens: bool = True) -> str:
                 return tok
         return back_transliterate_token(tok)
 
-    return re.sub(r"[\p{L}\p{Nd}][\p{L}\p{Nd}'’\-]*", _convert, text or "")
+    return re.sub(r"[\p{L}\p{Nd}][\p{L}\p{M}\p{Nd}'’\-]*", _convert, text or "")

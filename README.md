@@ -1,5 +1,7 @@
 # Multilingual Call-Centre Analytics
 
+[![CI](https://github.com/KG-2363/call-centre-multilingual-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/KG-2363/call-centre-multilingual-analytics/actions/workflows/ci.yml)
+
 End-to-end speech + conversation analytics for Indian contact centres, handling
 **English, Hindi (Devanagari), Hinglish (code-switched), and romanised Hindi in
 Latin script**.
@@ -8,11 +10,12 @@ Bronze → Silver → Gold over faster-whisper ASR and a local Ollama LLM, with
 compliance monitoring, agent scorecards, escalation prediction, and a
 quality-gated KPI layer.
 
-> **Status of this repository.** The code is complete and internally consistent,
-> but **it has not been executed** — the machine it was authored on has no working
-> Python interpreter (Windows Store stub only), no ffmpeg, and no running Docker
-> daemon. Follow the steps below to run it; treat the first `make test` as the
-> real verification. Nothing here reports results that were not measured.
+> **Status.** The offline test suite runs in CI on every push: 120 tests across
+> language ID, the Bronze → Silver → Gold pipeline and the gold star schema, on
+> Python 3.11 and 3.12. The ASR path that needs ffmpeg and faster-whisper, and the
+> Docker setup, are not exercised in CI; treat a local `make test` with the heavy
+> requirements as their verification. Nothing here reports results that were not
+> measured.
 
 ---
 

@@ -220,7 +220,29 @@ def stage_gold(settings: Settings) -> StageResult:
     """Silver -> Gold star schema, then score escalation risk."""
     counts = build_gold(settings)
     notes = _score_escalation(settings)
+    # fact_escalation_risk is created after build_gold() counted the tables, so
+    # count it here; otherwise the stage result under-reports what gold holds.
+    risk_rows = _table_count(settings, "fact_escalation_risk")
+    if risk_rows is not None:
+        counts["fact_escalation_risk"] = risk_rows
     return StageResult("gold", rows=sum(counts.values()), partitions=counts, notes=notes)
+
+
+def _table_count(settings: Settings, table: str) -> int | None:
+    import duckdb
+
+    con = duckdb.connect(str(settings.warehouse_path), read_only=True)
+    try:
+        exists = con.execute(
+            "SELECT count(*) FROM information_schema.tables "
+            "WHERE table_schema = 'main' AND table_name = ?",
+            [table],
+        ).fetchone()[0]
+        if not exists:
+            return None
+        return con.execute(f'SELECT count(*) FROM "{table}"').fetchone()[0]
+    finally:
+        con.close()
 
 
 def _score_escalation(settings: Settings) -> list[str]:
